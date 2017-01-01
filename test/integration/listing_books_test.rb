@@ -3,8 +3,9 @@ require 'test_helper'
 class ListingBooksTest < ActionDispatch::IntegrationTest
 	
 	setup do
-		Book.create!(title: 'Pragmatic Programmer', rating: 5)
-		Book.create!(title: "Ender's Game", rating: 1)
+		@scifi= Genre.create!(name: 'Science Fiction')
+		@scifi.books.create!(title: 'Star Trek', rating: 5)
+		@scifi.books.create!(title: "Ender's Game", rating: 1)
 	end
 
 
@@ -13,10 +14,10 @@ class ListingBooksTest < ActionDispatch::IntegrationTest
 
 		assert_equal 200, response.status
 		assert_equal Mime::JSON, response.content_type
-#		byebug
-		assert_equal Book.count, json(response.body)[:books].size
-# 		assert_equal Book.count, json(response.body).size
-
+		books = json(response.body)[:books]
+		assert_equal Book.count, books.size
+		book = Book.find(books.first[:id]) 
+		assert_equal @scifi.id, book.genre.id
 	
 	end
 	
@@ -25,9 +26,7 @@ class ListingBooksTest < ActionDispatch::IntegrationTest
 
 		assert_equal 200, response.status
 		assert_equal Mime::JSON, response.content_type
-#		byebug
 		assert_equal 1, json(response.body)[:books].size
-#		assert_equal 1, json(response.body).size
 
 	end
 end
