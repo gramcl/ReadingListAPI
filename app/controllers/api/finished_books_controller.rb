@@ -1,3 +1,4 @@
+module Api
 class FinishedBooksController < ApplicationController
   
   def index
@@ -8,4 +9,5 @@ class FinishedBooksController < ApplicationController
     end
   end
 
+end
 end
